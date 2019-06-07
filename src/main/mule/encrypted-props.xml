@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="7474a74e-68ac-4164-8028-e16d82c6eb11" file="secured-properties.yaml" key="${secure.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="babcbad9-33b3-489f-b02b-220659c674c4" >
+		<http:listener-connection host="0.0.0.0" port="19090" />
+	</http:listener-config>
+	<flow name="main" doc:id="4183688d-4391-445a-b70a-e081ce2d5ddb" >
+		<http:listener doc:name="Listener" doc:id="28376f73-2e19-41b9-84bb-c18885b70a34" config-ref="HTTP_Listener_config" path="/"/>
+		<ee:transform doc:name="Transform Message" doc:id="cc4b11be-9ba3-4903-836f-3ced0d0b9fc6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var propFile = readUrl("classpath://secured-properties.yaml", "application/java")
+output application/json
+---
+{
+	
+	propertyFileContents: propFile splitBy "\n",
+	decryptedProperty: p('secure::sensitive.value')
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
