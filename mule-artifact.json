@@ -1,3 +1,4 @@
 {
-  "minMuleVersion": "4.2.0"
+  "minMuleVersion": "4.2.0",
+  "secureProperties": ["secure::sensitive.value","secure.key"]
 }
