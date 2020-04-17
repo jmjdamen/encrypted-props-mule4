@@ -38,7 +38,7 @@ key                         value
 secure::sensitive.value     your new desired value in plain text
 
 *Please note that it matters if secure::key is typed in via the plain text properties view or the table view in Runtime Manager.
-When typed in the table view Runtime Manager will escape the colons like this: secure\:\:sensitive.value
+When typed in the table view Runtime Manager will escape the colons like this: secure\\:\\:sensitive.value
 When you provide this via the text view you need to pass this syntax in yourself.*
 
 More info: https://docs.mulesoft.com/mule-runtime/4.2/secure-configuration-properties
